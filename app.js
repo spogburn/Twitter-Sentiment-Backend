@@ -11,13 +11,12 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_TOKEN_SECRET
 });
 
-var error = function (err, response, body) {
-    console.log('ERROR [%s]', JSON.stringify(err));
-};
-var success = function (data) {
-    console.log('Data [%s]', data);
-};
-
+// var error = function (err, response, body) {
+//     console.log('ERROR [%s]', JSON.stringify(err));
+// };
+// var success = function (data) {
+//     console.log('Data [%s]', data);
+// };
 
 app.use(cors());
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -31,13 +30,19 @@ app.get('/validate_user/:userName', function(req, res) {
   console.log('PARAMS', params);
   return client.get('statuses/user_timeline', params)
   .then(function(response) {
-    // console.log('response', response);
+    console.log('response', response.map(function(tweet) {
+      return tweet.text;
+    }));
+    res.send(response.map(function(tweet) {
+      return tweet.text;
+    }));
   })
   .catch(function(error) {
-    console.log('error', error)
+    console.log('serverside error', error);
+    res.status(404).send({error: error});
   })
 })
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Twitter sentiment back end listening on port 3000');
 });
