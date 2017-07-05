@@ -38,7 +38,6 @@ app.get('/validate_user/:userName', function(req, res) {
 })
 
 app.post('/analyze', function(req, res) {
-  console.log('body from POST', req.body);
   var options = {
     method: 'POST',
     uri: 'http://sentiment.vivekn.com/api/batch/',
@@ -52,7 +51,6 @@ app.post('/analyze', function(req, res) {
   }
   return request(options)
   .then(function(response) {
-    console.log('response from sentiment analysis', response);
     res.status(200).json(response);
   })
   .catch(function(error) {
