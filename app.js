@@ -60,5 +60,5 @@ app.post('/analyze', function(req, res) {
 })
 
 app.listen(port, function () {
-  console.log('Twitter sentiment back end is on port 3000');
+  console.log('Twitter sentiment back end listening on port 3000');
 });
