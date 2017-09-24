@@ -12,9 +12,6 @@ const client = new Twitter({
   access_token_key: process.env.TWITTER_TOKEN,
   access_token_secret: process.env.TWITTER_TOKEN_SECRET
 });
-// Google Cloud Language
-const Language = require('@google-cloud/language');
-const language = Language();
 
 app.use(cors());
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -23,9 +20,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.get('/validate_user/:userName', function(req, res) {
-  const params = { screen_name: req.params.userName, include_rts: 1, trim_user: true, exclude_replies: true, count: 200 }
+  const params = { screen_name: req.params.userName, include_rts: 1, trim_user: true, exclude_replies: true, count: 20 }
   return client.get('statuses/user_timeline', params)
   .then(function(response) {
+    console.log('response', response);
     res.send(response.map((tweet) => {
       return tweet.text;
     }));
