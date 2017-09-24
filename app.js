@@ -1,18 +1,20 @@
-var express = require('express');
+const express = require('express');
 require('dotenv').config()
-var app = express();
-var request = require('request-promise');
-var cors = require('cors');
-var bodyParser = require('body-parser');
-var Twitter = require('twitter');
-var port = process.env.PORT || 3000;
-var client = new Twitter({
+const app = express();
+const request = require('request-promise');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const Twitter = require('twitter');
+const port = process.env.PORT || 3000;
+const client = new Twitter({
   consumer_key: process.env.TWITTER_KEY,
   consumer_secret: process.env.TWITTER_SECRET,
   access_token_key: process.env.TWITTER_TOKEN,
   access_token_secret: process.env.TWITTER_TOKEN_SECRET
 });
-
+// Google Cloud Language
+const Language = require('@google-cloud/language');
+const language = Language();
 
 app.use(cors());
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -21,14 +23,14 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.get('/validate_user/:userName', function(req, res) {
-  var params = { screen_name: req.params.userName, include_rts: 1, trim_user: true, exclude_replies: true, count: 200 }
+  const params = { screen_name: req.params.userName, include_rts: 1, trim_user: true, exclude_replies: true, count: 200 }
   return client.get('statuses/user_timeline', params)
   .then(function(response) {
-    res.send(response.map(function(tweet) {
+    res.send(response.map((tweet) => {
       return tweet.text;
     }));
   })
-  .catch(function(error) {
+  .catch((error) =>  {
     if (error.message) {
       res.status(401).send({message: '401 unauthorized', code: 401})
     } else {
@@ -38,7 +40,7 @@ app.get('/validate_user/:userName', function(req, res) {
 })
 
 app.post('/analyze', function(req, res) {
-  var options = {
+  const options = {
     method: 'POST',
     uri: 'http://sentiment.vivekn.com/api/batch/',
     body: req.body,
