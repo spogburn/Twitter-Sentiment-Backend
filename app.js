@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.get('/validate_user/:userName', function(req, res) {
-  var params = { screen_name: req.params.userName, include_rts: 1, trim_user: true, exclude_replies: true, count: 20 }
+  var params = { screen_name: req.params.userName, include_rts: true, trim_user: true, exclude_replies: true, count: 20 }
   return client.get('statuses/user_timeline', params)
   .then(function(response) {
     res.send(response.map(function(tweet) {
